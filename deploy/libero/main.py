@@ -11,10 +11,7 @@ import numpy as np
 import requests
 import tqdm
 import tyro
-import sys
 
-sys.path.append("/inspire/qb-ilm2/project/robot-learning-system/public/yehangjian/LIBERO")
-sys.path.append("/inspire/qb-ilm/project/robot-learning-system/public/yehangjian/openpi/packages/openpi-client/src")
 from libero.libero import benchmark
 from libero.libero import get_libero_path
 from libero.libero.envs import OffScreenRenderEnv
