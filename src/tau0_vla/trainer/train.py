@@ -538,7 +538,9 @@ def _maybe_wait_for_debugger() -> None:
     matching torchrun rank(s) listen on port ``VLA_DEBUGPY_PORT``(default
     5678)+rank and BLOCK until a debugger (VSCode "attach") connects. Unset =
     zero overhead. Non-listed ranks run free; while a listed rank sits at a
-    breakpoint the others wait at the next collective (ddp_timeout budget)."""
+    breakpoint the others wait at the next collective (ddp_timeout budget).
+    Listens on ``VLA_DEBUGPY_HOST`` (default ``127.0.0.1``); set it only when
+    remote attach is genuinely required, since debugpy has no authentication."""
     ranks = os.environ.get("VLA_DEBUGPY_RANKS")
     if not ranks:
         return
@@ -548,8 +550,13 @@ def _maybe_wait_for_debugger() -> None:
     import debugpy
 
     port = int(os.environ.get("VLA_DEBUGPY_PORT", "5678")) + rank
-    debugpy.listen(("0.0.0.0", port))
-    print(f"[debugpy] rank {rank} listening on :{port} — waiting for attach ...", flush=True)
+    # debugpy has no authentication: whoever connects first executes arbitrary
+    # code in the training process. Default to localhost so enabling the
+    # debugger on a shared cluster does not expose RCE to every network peer;
+    # VLA_DEBUGPY_HOST is the explicit escape hatch for remote attach.
+    host = os.environ.get("VLA_DEBUGPY_HOST", "127.0.0.1")
+    debugpy.listen((host, port))
+    print(f"[debugpy] rank {rank} listening on {host}:{port} — waiting for attach ...", flush=True)
     debugpy.wait_for_client()
 
 
