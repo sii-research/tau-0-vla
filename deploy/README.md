@@ -55,12 +55,17 @@ The server exposes:
   action chunk;
 - `GET /health` — health check.
 
-Both POST request bodies are Python-pickled dictionaries. FastAPI serializes
+Both POST request bodies are `.npz` bundles (`deploy/wire.py`): numpy arrays
+travel as named entries, all other leaves in a JSON envelope, always decoded
+with `allow_pickle=False`. FastAPI serializes
 responses as JSON: `/act` returns a semantic dictionary and the legacy-named
 `/act_lerobot_bytes` returns a nested numeric list, not raw bytes.
 
-Unpickling is unsafe for untrusted input. The server binds to `127.0.0.1` by
-default; expose it beyond localhost only inside a trusted, isolated network.
+The wire format never unpickles request bodies — pickled payloads are remote
+code execution for anyone who can reach the port. Bodies are also capped
+(`MAX_BODY_BYTES`) so a hostile or broken client cannot exhaust memory. The
+server binds to `127.0.0.1` by default; expose it beyond localhost only inside
+a trusted, isolated network.
 
 For `/act`, send raw task text in `payload["prompt"]`; `encode_payload` applies
 the saved prompt template. Sending already-templated text wraps it twice.

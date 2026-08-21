@@ -7,7 +7,7 @@ one — what column order the SDK expects actions back in.
 
 Extracted verbatim out of ``deploy/server.py`` per
 the adapter's layer-3 boundary. ``deploy/server.py``
-keeps the HTTP surface (routes, pickle framing, logging); this module keeps the
+keeps the HTTP surface (routes, wire framing, logging); this module keeps the
 embodiment knowledge. No behaviour changed in the move.
 
 For your own robot, copy this file. Four things in it are yours to change, and

@@ -27,7 +27,6 @@ del _sys, _Path
 import argparse
 import json
 import logging
-import pickle
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict
@@ -37,6 +36,7 @@ import numpy as np
 
 from deploy._bootstrap import ensure_configs_registered, resolve_deploy_io
 from deploy.openloop import run_eval
+from deploy.wire import pack_payload
 from tau0_vla.data import action_slices
 from tau0_vla.data.config import discover_config_modules, get_config, list_configs
 
@@ -45,15 +45,16 @@ logger = logging.getLogger(__name__)
 
 class PolicyClient:
     """HTTP client for ``deploy/server.py``'s ``POST /act``. ``infer()``
-    returns the server's raw dict response unchanged. Self-contained
-    (only stdlib) — drop into any end-side script."""
+    returns the server's raw dict response unchanged. Wire encoding lives in
+    ``deploy/wire.py`` (stdlib + numpy) — keep both files together when
+    dropping the client into an end-side script."""
 
     def __init__(self, *, server_url: str, timeout: float = 120.0):
         self._url = server_url.rstrip("/") + "/act"
         self._timeout = timeout
 
     def infer(self, payload: Dict[str, Any]) -> Dict[str, Any]:
-        req = Request(self._url, data=pickle.dumps(payload), method="POST",
+        req = Request(self._url, data=pack_payload(payload), method="POST",
                       headers={"Content-Type": "application/octet-stream"})
         with urlopen(req, timeout=self._timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))

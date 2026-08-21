@@ -9,10 +9,9 @@ del _sys, _Path
 
 import argparse
 import logging
-import pickle
 
 import numpy as np
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 
 from deploy._bootstrap import (
     discover_checkpoint_config_modules,
@@ -22,6 +21,7 @@ from deploy._bootstrap import (
 )
 from deploy.policy import Tau0VLAPolicy
 from deploy.warmup import _configure_inference_mode, _run_dummy_input_warmup
+from deploy.wire import MAX_BODY_BYTES, unpack_payload
 from tau0_vla.data import action_slices as _action_slices
 
 logger = logging.getLogger(__name__)
@@ -88,9 +88,18 @@ def build_app(policy: Tau0VLAPolicy, *, adapter: str | None = None) -> FastAPI:
 
     app = FastAPI()
 
+    async def _read_payload(request: Request) -> dict:
+        body = await request.body()
+        if len(body) > MAX_BODY_BYTES:
+            raise HTTPException(status_code=413, detail="payload body too large")
+        try:
+            return unpack_payload(body)
+        except Exception as error:
+            raise HTTPException(status_code=400, detail="invalid payload encoding") from error
+
     @app.post("/act_lerobot_bytes")
     async def act(request: Request):
-        actions = policy.infer(adapt(pickle.loads(await request.body())))["actions"]
+        actions = policy.infer(adapt(await _read_payload(request)))["actions"]
         # Unified routes: reorder columns into the SDK's native action layout
         # (arms-then-grippers) before serialising. Component routes: identity.
         arr = deploy_io.apply_sdk_action_perm(actions, resolve_sdk_action_perm())
@@ -103,7 +112,7 @@ def build_app(policy: Tau0VLAPolicy, *, adapter: str | None = None) -> FastAPI:
         is a dict keyed by canonical joint-control component name
         (``arm_joint`` / ``gripper`` / ``waist`` / ...), each value a nested
         list shape ``[chunk, native_dim]``."""
-        payload = pickle.loads(await request.body())
+        payload = await _read_payload(request)
         # A mismatch between the caller's prompt and the templated one is the
         # first thing to check when a policy behaves differently over HTTP than
         # in open loop, so log both. DEBUG, not INFO: this is on the hot path.
