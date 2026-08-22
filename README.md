@@ -79,6 +79,37 @@ Run open-loop evaluation:
 python deploy/openloop.py --ckpt outputs/<run_name> --no-plot
 ```
 
+### LIBERO simulation evaluation
+
+LIBERO uses its dedicated simulator-only EEF server and client. From the
+repository root, start the deployment server in one terminal:
+
+```bash
+python -m deploy.libero_server \
+    --model /path/to/libero-checkpoint \
+    --host 127.0.0.1 \
+    --port 8000
+```
+
+
+In another terminal, make the LIBERO package and `openpi_client` importable,
+then start the evaluation client:
+
+```bash
+python -m deploy.libero.main \
+    --args.host 127.0.0.1 \
+    --args.port 8000 \
+    --args.task-suite-name libero_object \
+    --args.num-trials-per-task 50 \
+    --args.video-out-path outputs/libero_eval/libero_spatial
+```
+
+`--task-suite-name` supports `libero_spatial`, `libero_object`,
+`libero_goal`, `libero_10`. Increase
+`--num-trials-per-task` for a full evaluation. The client saves rollout videos
+and an aggregate success-rate summary in `results.txt` under
+`--video-out-path`.
+
 See [`deploy/`](deploy/README.md) for the payload and action-order contracts.
 
 ## Repository layout

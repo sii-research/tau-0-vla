@@ -25,7 +25,10 @@ from tau0_vla.data.robots.unified import UNIFIED_DIM, UNIFIED_LAYOUT, UnifiedAss
 # initialized module" when a caller imports the adapter first — which the
 # deploy path does. Deferring makes both orders work.
 
-_ADAPTER_MODULES = ("tau0_vla.adapters.g1",)
+_ADAPTER_MODULES = (
+    "tau0_vla.adapters.g1",
+    "tau0_vla.adapters.libero",
+)
 
 # Robot name (as recorded in a Data Spec) -> ``(module, attr)`` of its
 # RobotConfig class. These keys are part of the serialized contract.
@@ -39,6 +42,7 @@ _ROBOT_CLASS_PATHS = {
     "g1_agibot_unified": ("tau0_vla.adapters.g1", "G1AgibotUnified"),
     "g1_daas_unified": ("tau0_vla.adapters.g1", "G1DaasUnified"),
     "g1_a2d_joint_unified": ("tau0_vla.adapters.g1", "G1A2dJointUnified"),
+    "libero": ("tau0_vla.adapters.libero", "LiberoRobot"),
 }
 
 

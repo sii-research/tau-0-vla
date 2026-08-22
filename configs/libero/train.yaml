@@ -1,0 +1,60 @@
+experiment:
+  run_name: tau0_vla_libero_eef_ft
+  project_name: tau-0-vla-libero
+  notes: "LIBERO: 6D EEF pose + 2D gripper state, 6D delta EEF + 1D gripper action, horizon 10."
+
+model_args:
+  model_name_or_path: <PATH_TO_TAU0_CHECKPOINT>
+  vlm_model_type: qwen3.5
+  vla_model_type: tau0_vla
+  tune_mm_vision: true
+  tune_mm_mlp: true
+  tune_mm_llm: true
+  tune_vla_dit: true
+  loss_type: fm
+  num_steps: 10
+  vlm_causal: true
+  tau_vla_prefix_flash_backend: true
+  vla_inactive_input_zero: true
+
+data_args:
+  config_name: libero_eef_ft
+  max_images_per_sample: 2
+  vla_max_token_len: 2048
+  max_pixels: 50176
+  min_pixels: 3136
+  camera_keys:
+    - image
+    - wrist_image
+  cam_view_template: "{} view: <image>"
+  cam_view_names:
+    image: "agent"
+    wrist_image: "wrist"
+
+training_args:
+  output_dir: outputs/
+  max_steps: 70000
+  per_device_train_batch_size: 16
+  gradient_accumulation_steps: 1
+  model_max_length: 2048
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.01
+  lr_scheduler_type: cosine
+  max_grad_norm: 1.0
+  bf16: true
+  attn_implementation: sdpa
+  seed: 42
+  data_seed: 42
+  logging_steps: 10
+  save_strategy: steps
+  save_steps: 10000
+  save_total_limit: 20
+  dataloader_num_workers: 8
+  dataloader_drop_last: true
+  dataloader_pin_memory: true
+  dataloader_persistent_workers: true
+  report_to: none
+  ddp_find_unused_parameters: true
+  ddp_timeout: 7200
+  deepspeed: scripts/deepspeed/zero1.json
