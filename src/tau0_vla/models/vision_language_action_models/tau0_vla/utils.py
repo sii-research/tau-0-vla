@@ -51,9 +51,18 @@ def create_sinusoidal_pos_embedding(
 
 
 def sample_beta(alpha, beta, bsize, device):
-    gamma1 = torch.rand((bsize,), device=device).pow(1 / alpha)
-    gamma2 = torch.rand((bsize,), device=device).pow(1 / beta)
-    return gamma1 / (gamma1 + gamma2)
+    """Draw ``bsize`` samples from ``Beta(alpha, beta)`` on ``device``.
+
+    Sampling powered uniforms and taking their ratio is not a Beta sampler
+    (except for special parameter choices): the powered variables are not
+    Gamma-distributed, so the flow-matching time distribution is biased.  Use
+    PyTorch's Gamma-based implementation instead and create the concentration
+    tensors on the requested device to avoid an implicit host-to-device copy.
+    """
+    alpha_t = torch.as_tensor(alpha, dtype=torch.float32, device=device)
+    beta_t = torch.as_tensor(beta, dtype=torch.float32, device=device)
+    distribution = torch.distributions.Beta(alpha_t, beta_t)
+    return distribution.sample((bsize,))
 
 
 def make_att_2d_masks(pad_masks, att_masks):
