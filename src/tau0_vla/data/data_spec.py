@@ -76,6 +76,10 @@ class FinchDataSpec:
     # field composite like gripper → [left_effector, right_effector]).
     state_field_map: tuple[tuple[str, Any], ...] = ()
     action_field_map: tuple[tuple[str, Any], ...] = ()
+    # Optional exact active slots for padded component routes. Empty preserves
+    # the historical contiguous-prefix mask.
+    state_active_indices: tuple[int, ...] = ()
+    action_active_indices: tuple[int, ...] = ()
     # Unified 40D contract. When ``unified_registry_key`` is set, the route uses
     # the fixed-slot UnifiedAssembler scatter (NOT declared components), so
     # ``restore_action`` must un-scatter via ``restore_unified_action`` instead of
@@ -257,6 +261,8 @@ def _build_data_spec(
     # the un-scatter inverse. ``has_eef`` mirrors UnifiedAssembler's
     # ``has_eef_action`` (declared native column or an adapter provider).
     rc = exemplar.robot_config
+    state_active_indices = tuple(int(i) for i in (getattr(rc, "_state_active_indices", None) or ()))
+    action_active_indices = tuple(int(i) for i in (getattr(rc, "_action_active_indices", None) or ()))
     unified_registry_key = getattr(rc, "_unified_registry_key", None)
     unified_has_eef = True
     if unified_registry_key is not None:
@@ -290,6 +296,8 @@ def _build_data_spec(
         cam_view_template=cam_view_template,
         cam_view_names=cam_view_names,
         max_images_per_sample=max_images_per_sample,
+        state_active_indices=state_active_indices,
+        action_active_indices=action_active_indices,
         unified_registry_key=unified_registry_key,
         unified_has_eef=unified_has_eef,
     )
@@ -668,6 +676,8 @@ def _load_persisted_data_spec(
         action_component_dims=action_component_dims,
         state_field_map=state_field_map,
         action_field_map=action_field_map,
+        state_active_indices=tuple(int(i) for i in (payload.get("state_active_indices") or ())),
+        action_active_indices=tuple(int(i) for i in (payload.get("action_active_indices") or ())),
         unified_registry_key=payload.get("unified_registry_key"),
         unified_has_eef=bool(payload.get("unified_has_eef", True)),
     )
@@ -1089,6 +1099,8 @@ def build_state_encoder(data_spec: "FinchDataSpec"):
         action_field_map=action_map,
         state_padding_dim=data_spec.state_dim,
         action_padding_dim=data_spec.action_dim,
+        state_active_indices=data_spec.state_active_indices or None,
+        action_active_indices=data_spec.action_active_indices or None,
         state_has_temporal_axis=has_temporal_axis,
         augment_fn=augment_fn,
     )
@@ -1675,6 +1687,14 @@ def encode_payload(payload: "dict[str, Any]", data_spec: FinchDataSpec) -> dict[
         encoded["action_mask"] = bundle["action_mask"]
     else:
         encoded["state"] = encode_state(raw_state, data_spec)
+        if data_spec.state_active_indices:
+            state_mask = np.zeros(data_spec.state_dim, dtype=np.float32)
+            state_mask[list(data_spec.state_active_indices)] = 1.0
+            encoded["state_mask"] = state_mask
+        if data_spec.action_active_indices:
+            action_mask = np.zeros(data_spec.action_dim, dtype=np.float32)
+            action_mask[list(data_spec.action_active_indices)] = 1.0
+            encoded["action_mask"] = action_mask
     return encoded
 
 

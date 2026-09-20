@@ -6,7 +6,15 @@ from tau0_vla.data.modalities.gripper import Gripper
 from tau0_vla.data.modalities.image import Image, SyntheticImage
 from tau0_vla.data.modalities.language import Prompt
 from tau0_vla.data.modalities.payload import Payload
-from tau0_vla.data.modalities.transforms import Euler2Rot6D, ImpulseToStep, Quat2Rot6D, RelativeToState
+from tau0_vla.data.modalities.transforms import (
+    AxisAngle2Rot6D,
+    Euler2Rot6D,
+    ImpulseToStep,
+    PadToDim,
+    PairToDifference,
+    Quat2Rot6D,
+    RelativeToState,
+)
 from tau0_vla.data.modalities.waist import Waist
 
 # `ComponentSpec` is the historical name of what is now conceptually a
@@ -16,6 +24,7 @@ ModalitySpec = ComponentSpec
 
 __all__ = [
     "ArmJoint",
+    "AxisAngle2Rot6D",
     "ChassisVelocity",
     "ComponentSpec",
     "EefPose",
@@ -26,6 +35,8 @@ __all__ = [
     "ImpulseToStep",
     "ModalitySpec",
     "Payload",
+    "PadToDim",
+    "PairToDifference",
     "Prompt",
     "Quat2Rot6D",
     "RelativeToState",

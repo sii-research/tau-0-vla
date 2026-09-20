@@ -7,7 +7,9 @@ joint-control checkpoints only.
 | entry point | purpose |
 |---|---|
 | `policy.py` | `Tau0VLAPolicy.from_checkpoint(...).infer(payload)` |
-| `server.py` | HTTP policy server |
+| `server.py` | joint-control hardware HTTP policy server |
+| `libero_server.py` | simulator-only LIBERO EEF policy server |
+| `libero/main.py` | LIBERO simulation client and episode records |
 | `openloop.py` | local checkpoint evaluation |
 | `openloop_with_server.py` | evaluation through a running server |
 | `check_parity.py` | compare local and server inference |
@@ -77,6 +79,44 @@ For `/act`, send raw task text in `payload["prompt"]`; `encode_payload` applies
 the saved prompt template. Sending already-templated text wraps it twice.
 Dictionary insertion order in the response is irrelevant. The flat endpoint is
 positional and must match the SDK exactly.
+
+## LIBERO simulator-only EEF service
+
+`python -m deploy.libero_server --model /path/to/tau-0-vla-libero --seed 7`
+loads a LIBERO checkpoint through the same Data Spec, encoder, model loader,
+and action restoration as `Tau0VLAPolicy`. Its adapter requires an 8D raw
+state and the saved two-camera contract. The model-facing 40D representation
+has active slots `0:9` and `18`.
+
+| Contract | Hardware `deploy.server` | Simulator `deploy.libero_server` |
+| --- | --- | --- |
+| Control | joint-only | LIBERO delta EEF |
+| Action route | `/act`, `/act_lerobot_bytes` | `/act_libero` |
+| Raw state | checkpoint/adapter-specific | xyz(3), axis-angle(3), finger qpos(2) |
+| Returned actions | semantic dictionary or SDK joint order | JSON `[horizon, 7]`: delta xyz(3), delta axis-angle(3), gripper(1) |
+| Episode reset | no LIBERO reset contract | `POST /reset_episode?seed=7` resets RNGs |
+| Health | `/health` | `/health`, including horizon and weight SHA-256 |
+
+`POST /act_libero` accepts a pickled dictionary:
+
+```python
+{
+    "observation/image": front_rgb,        # HWC uint8 RGB
+    "observation/wrist_image": wrist_rgb, # HWC uint8 RGB
+    "observation/state": state_8d,         # xyz + axis-angle + two finger joints
+    "prompt": "pick up the object",       # raw task text
+}
+```
+
+The LIBERO client rotates the simulator images 180° to match the training data.
+The policy applies the saved prompt and normalization, and converts model
+rot6d outputs back to axis-angle. The dedicated server validates finite 7D
+actions and returns the checkpoint horizon (10 for the supplied export).
+The client replans after 8 actions by default. Keep this pickle service on
+localhost or a trusted isolated network, with one evaluator per process.
+
+See the [LIBERO guide](../configs/libero/README.md) for checkpoint downloads,
+model and simulator environments, evaluation commands, and results.
 
 ## Adapter input mapping
 

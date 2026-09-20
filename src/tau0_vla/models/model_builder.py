@@ -211,16 +211,25 @@ class ModelBuilder:
             old_max_state = getattr(cfg, "max_state_dim", new_max_state)
             need_resize = (old_max_action != new_max_action or old_max_state != new_max_state)
 
+            new_action_steps = int(self.data_args.action_horizon)
+            saved_action_steps = getattr(cfg, "n_action_steps", None)
+
             arch_overrides = {
                 "max_action_dim": new_max_action,
                 "max_state_dim": new_max_state,
-                "n_action_steps": int(self.data_args.action_horizon),
                 "adanorm_time": getattr(self.model_args, "adanorm_time", None),
             }
             if need_resize:
                 arch_overrides.pop("max_action_dim")
                 arch_overrides.pop("max_state_dim")
             Tau0VLAModel.validate_arch_compat(cfg, arch_overrides)
+
+            if saved_action_steps != new_action_steps:
+                rank0_print(
+                    f"Adapting action horizon: {saved_action_steps}->{new_action_steps}. "
+                    "Reusing the checkpoint's shared action-token weights."
+                )
+            cfg.n_action_steps = new_action_steps
 
             cfg.freeze_vision_encoder = freeze_vision_encoder
             cfg.train_expert_only = train_expert_only

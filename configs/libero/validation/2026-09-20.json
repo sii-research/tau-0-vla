@@ -1,0 +1,622 @@
+{
+  "date_utc": "2026-09-20",
+  "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+  "libero_revision": "8f1084e3132a39270c3a13ebe37270a43ece2a01",
+  "weight_sha256": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec",
+  "protocol": {
+    "seed": 7,
+    "policy_seed_reset_each_episode": true,
+    "initial_state_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "replan_steps": 8,
+    "action_horizon": 10,
+    "infer_mode": "eager",
+    "num_steps_wait": 10
+  },
+  "suites": [
+    {
+      "suite": "libero_spatial",
+      "successes": 48,
+      "episodes": 50,
+      "errors": 0,
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "pick up the black bowl between the plate and the ramekin and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 1,
+          "task": "pick up the black bowl next to the ramekin and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 2,
+          "task": "pick up the black bowl from table center and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 3,
+          "task": "pick up the black bowl on the cookie box and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 4,
+          "task": "pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 5,
+          "task": "pick up the black bowl on the ramekin and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 6,
+          "task": "pick up the black bowl next to the cookie box and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 7,
+          "task": "pick up the black bowl on the stove and place it on the plate",
+          "successes": 4,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 8,
+          "task": "pick up the black bowl next to the plate and place it on the plate",
+          "successes": 4,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 9,
+          "task": "pick up the black bowl on the wooden cabinet and place it on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        }
+      ]
+    },
+    {
+      "suite": "libero_object",
+      "successes": 50,
+      "episodes": 50,
+      "errors": 0,
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "pick up the alphabet soup and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 1,
+          "task": "pick up the cream cheese and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 2,
+          "task": "pick up the salad dressing and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 3,
+          "task": "pick up the bbq sauce and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 4,
+          "task": "pick up the ketchup and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 5,
+          "task": "pick up the tomato sauce and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 6,
+          "task": "pick up the butter and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 7,
+          "task": "pick up the milk and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 8,
+          "task": "pick up the chocolate pudding and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 9,
+          "task": "pick up the orange juice and place it in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        }
+      ]
+    },
+    {
+      "suite": "libero_goal",
+      "successes": 49,
+      "episodes": 50,
+      "errors": 0,
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "open the middle drawer of the cabinet",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 1,
+          "task": "put the bowl on the stove",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 2,
+          "task": "put the wine bottle on top of the cabinet",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 3,
+          "task": "open the top drawer and put the bowl inside",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 4,
+          "task": "put the bowl on top of the cabinet",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 5,
+          "task": "push the plate to the front of the stove",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 6,
+          "task": "put the cream cheese in the bowl",
+          "successes": 4,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 7,
+          "task": "turn on the stove",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 8,
+          "task": "put the bowl on the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 9,
+          "task": "put the wine bottle on the rack",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        }
+      ]
+    },
+    {
+      "suite": "libero_10",
+      "successes": 46,
+      "episodes": 50,
+      "errors": 0,
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "put both the alphabet soup and the tomato sauce in the basket",
+          "successes": 4,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 1,
+          "task": "put both the cream cheese box and the butter in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 2,
+          "task": "turn on the stove and put the moka pot on it",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 3,
+          "task": "put the black bowl in the bottom drawer of the cabinet and close it",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 4,
+          "task": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+          "successes": 4,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 5,
+          "task": "pick up the book and place it in the back compartment of the caddy",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 6,
+          "task": "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 7,
+          "task": "put both the alphabet soup and the cream cheese box in the basket",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 8,
+          "task": "put both moka pots on the stove",
+          "successes": 3,
+          "episodes": 5,
+          "errors": 0
+        },
+        {
+          "task_id": 9,
+          "task": "put the yellow and white mug in the microwave and close it",
+          "successes": 5,
+          "episodes": 5,
+          "errors": 0
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18004,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_spatial",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 1,
+        "episode_start": 0,
+        "video_out_path": "smoke-final/libero_spatial",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": true,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    },
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18004,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_spatial",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 4,
+        "episode_start": 1,
+        "video_out_path": "remaining/libero_spatial",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": true,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    },
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18004,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_object",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 1,
+        "episode_start": 0,
+        "video_out_path": "smoke/libero_object",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": false,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    },
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18006,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_object",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 4,
+        "episode_start": 1,
+        "video_out_path": "remaining/libero_object",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": true,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    },
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18005,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_goal",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 1,
+        "episode_start": 0,
+        "video_out_path": "smoke/libero_goal",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": false,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    },
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18007,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_goal",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 4,
+        "episode_start": 1,
+        "video_out_path": "remaining/libero_goal",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": true,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    },
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18005,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_10",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 1,
+        "episode_start": 0,
+        "video_out_path": "smoke/libero_10",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": true,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    },
+    {
+      "args": {
+        "host": "127.0.0.1",
+        "port": 18005,
+        "server_wait_timeout": 120,
+        "resize_size": 224,
+        "replan_steps": 8,
+        "task_suite_name": "libero_10",
+        "num_steps_wait": 10,
+        "num_trials_per_task": 4,
+        "episode_start": 1,
+        "video_out_path": "remaining/libero_10",
+        "seed": 7
+      },
+      "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c",
+      "code_dirty": true,
+      "client_sha256": "dff9ed642cf80deecfeccf95a96a8c5598f61c6fb24deec26a4198612e2bf493",
+      "server": {
+        "status": "ok",
+        "route": "libero_eef_robot_prompt_ft",
+        "state_contract": "eef_xyz(3)+eef_axis_angle(3)+gripper(2)",
+        "action_contract": "delta_xyz(3)+delta_axis_angle(3)+gripper(1)",
+        "action_horizon": 10,
+        "metadata": {
+          "checkpoint": "hf-checkpoint-60000",
+          "weight_sha256": {
+            "model.safetensors": "e03870720cbddbd0f3be44ee929a5d23efb9bf9532f0ac1c1bf676224aacc8ec"
+          },
+          "seed": 7,
+          "infer_mode": "eager",
+          "server_sha256": "72560d13ac85a6b61bd1e9b055e7aa1a9ecd41318460385b2cac5cd70e98ce45",
+          "code_revision": "5e4a70ab0338b0639a82444d0f97150e0b1cf43c"
+        }
+      }
+    }
+  ],
+  "total_episodes": 200,
+  "total_successes": 193,
+  "total_errors": 0,
+  "coarse_thresholds_met": true,
+  "episode_records": "2026-09-20-episodes.csv"
+}

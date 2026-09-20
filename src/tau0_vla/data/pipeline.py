@@ -596,6 +596,8 @@ class ComponentAssembler:
         action_field_map: Mapping[str, str] | None = None,
         state_padding_dim: int | None = None,
         action_padding_dim: int | None = None,
+        state_active_indices: Sequence[int] | None = None,
+        action_active_indices: Sequence[int] | None = None,
         disable_component_normalization: bool = False,
         state_has_temporal_axis: bool = False,
         augment_fn: "Callable[..., tuple[np.ndarray, np.ndarray]] | None" = None,
@@ -608,6 +610,8 @@ class ComponentAssembler:
         self.action_field_map = dict(action_field_map or {})
         self.state_padding_dim = state_padding_dim
         self.action_padding_dim = action_padding_dim
+        self.state_active_indices = None if state_active_indices is None else tuple(int(i) for i in state_active_indices)
+        self.action_active_indices = None if action_active_indices is None else tuple(int(i) for i in action_active_indices)
         self.disable_component_normalization = disable_component_normalization
         self.state_has_temporal_axis = state_has_temporal_axis
         self.augment_fn = augment_fn
@@ -652,8 +656,12 @@ class ComponentAssembler:
             "prompt": updated.get("prompt"),
             "state": _pad_vector(state, self.state_padding_dim, label="state"),
             "action": _pad_vector(action, self.action_padding_dim, label="action"),
-            "state_mask": _component_mask(state.shape[-1], self.state_padding_dim, label="state_mask"),
-            "action_mask": _component_mask(action.shape[-1], self.action_padding_dim, label="action_mask"),
+            "state_mask": _active_indices_mask(
+                state.shape[-1], self.state_padding_dim, self.state_active_indices, label="state_mask"
+            ),
+            "action_mask": _active_indices_mask(
+                action.shape[-1], self.action_padding_dim, self.action_active_indices, label="action_mask"
+            ),
         }
         if self.return_all_norm_forms:
             result["extras"] = {
@@ -1156,6 +1164,29 @@ def _component_mask(active_dim: int, padding_dim: int | None, *, label: str) -> 
         raise ValueError(f"{label} padding_dim={output_dim} is smaller than active dim={active_dim}")
     mask = np.zeros(output_dim, dtype=np.float32)
     mask[:active_dim] = 1.0
+    return mask
+
+
+def _active_indices_mask(
+    component_dim: int,
+    padding_dim: int | None,
+    active_indices: Sequence[int] | None,
+    *,
+    label: str,
+) -> np.ndarray:
+    if active_indices is None:
+        return _component_mask(component_dim, padding_dim, label=label)
+    output_dim = int(component_dim) if padding_dim is None else int(padding_dim)
+    if component_dim > output_dim:
+        raise ValueError(f"{label} padding_dim={output_dim} is smaller than component dim={component_dim}")
+    indices = tuple(int(index) for index in active_indices)
+    invalid = [index for index in indices if index < 0 or index >= output_dim]
+    if invalid:
+        raise ValueError(f"{label} contains indices outside [0, {output_dim - 1}]: {invalid}")
+    if len(indices) != len(set(indices)):
+        raise ValueError(f"{label} contains duplicate active indices: {indices}")
+    mask = np.zeros(output_dim, dtype=np.float32)
+    mask[list(indices)] = 1.0
     return mask
 
 

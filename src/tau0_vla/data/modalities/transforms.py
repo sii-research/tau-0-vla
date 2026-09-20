@@ -336,6 +336,139 @@ class Quat2Rot6D(ComponentTransform):
         return Quat2Rot6D._normalize(quat_xyzw).astype(np.float32)
 
 
+class AxisAngle2Rot6D(ComponentTransform):
+    """Convert xyz+axis-angle blocks (6D) to xyz+rot6d blocks (9D)."""
+
+    def forward(
+        self,
+        value: np.ndarray,
+        context: WorkflowContext,
+        *,
+        component: ComponentSpec,
+        state_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
+        del context, component, state_reference
+        from scipy.spatial.transform import Rotation
+
+        pose = np.asarray(value, dtype=np.float32)
+        pose_dim = pose.shape[-1]
+        if pose_dim % 6 != 0:
+            raise ValueError(f"AxisAngle2Rot6D expects xyz+axis-angle blocks of 6 dims, got shape={pose.shape}")
+        blocks = pose.reshape(*pose.shape[:-1], pose_dim // 6, 6)
+        rotvec = blocks[..., 3:]
+        rotation = Rotation.from_rotvec(rotvec.reshape(-1, 3)).as_matrix().reshape(*rotvec.shape[:-1], 3, 3)
+        rot6d = RelativeToState._matrix_to_rot6d(rotation)
+        return np.concatenate([blocks[..., :3], rot6d], axis=-1).reshape(*pose.shape[:-1], -1).astype(np.float32)
+
+    def inverse(
+        self,
+        value: np.ndarray,
+        context: WorkflowContext,
+        *,
+        component: ComponentSpec,
+        state_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
+        del context, component, state_reference
+        from scipy.spatial.transform import Rotation
+
+        pose = np.asarray(value, dtype=np.float32)
+        pose_dim = pose.shape[-1]
+        if pose_dim % 9 != 0:
+            raise ValueError(f"AxisAngle2Rot6D inverse expects xyz+rot6d blocks of 9 dims, got shape={pose.shape}")
+        blocks = pose.reshape(*pose.shape[:-1], pose_dim // 9, 9)
+        rotation = RelativeToState._rot6d_to_matrix(blocks[..., 3:])
+        flat_rotation = rotation.reshape(-1, 3, 3)
+        valid = np.isfinite(flat_rotation).all(axis=(1, 2)) & (np.linalg.det(flat_rotation) > 1e-6)
+        if not np.all(valid):
+            # Decoder construction probes inverse transforms with an all-zero
+            # vector to infer native output dimensions. A zero rot6d has no
+            # orientation; interpret this (and similarly degenerate model
+            # outputs) as identity instead of asking scipy to invert a null
+            # coordinate frame.
+            flat_rotation = flat_rotation.copy()
+            flat_rotation[~valid] = np.eye(3, dtype=np.float32)
+        rotvec = Rotation.from_matrix(flat_rotation).as_rotvec().reshape(*blocks.shape[:-1], 3)
+        return np.concatenate([blocks[..., :3], rotvec], axis=-1).reshape(*pose.shape[:-1], -1).astype(np.float32)
+
+
+class PadToDim(ComponentTransform):
+    """Right-pad one component so the following component starts at a semantic slot."""
+
+    def __init__(self, input_dim: int, output_dim: int) -> None:
+        self.input_dim = int(input_dim)
+        self.output_dim = int(output_dim)
+        if self.input_dim <= 0 or self.output_dim < self.input_dim:
+            raise ValueError(f"PadToDim requires 0 < input_dim <= output_dim, got {input_dim}, {output_dim}")
+
+    def forward(
+        self,
+        value: np.ndarray,
+        context: WorkflowContext,
+        *,
+        component: ComponentSpec,
+        state_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
+        del context, component, state_reference
+        array = np.asarray(value, dtype=np.float32)
+        if array.shape[-1] != self.input_dim:
+            raise ValueError(f"PadToDim expected trailing dim {self.input_dim}, got shape={array.shape}")
+        pad_width = [(0, 0)] * array.ndim
+        pad_width[-1] = (0, self.output_dim - self.input_dim)
+        return np.pad(array, pad_width, mode="constant", constant_values=0.0).astype(np.float32)
+
+    def inverse(
+        self,
+        value: np.ndarray,
+        context: WorkflowContext,
+        *,
+        component: ComponentSpec,
+        state_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
+        del context, component, state_reference
+        array = np.asarray(value, dtype=np.float32)
+        if array.shape[-1] != self.output_dim:
+            raise ValueError(f"PadToDim inverse expected trailing dim {self.output_dim}, got shape={array.shape}")
+        return array[..., : self.input_dim]
+
+
+class PairToDifference(ComponentTransform):
+    """Collapse two opposing gripper joints to one signed opening value."""
+
+    def __init__(self, scale: float = 0.5) -> None:
+        self.scale = float(scale)
+        if self.scale == 0.0:
+            raise ValueError("PairToDifference scale must be non-zero")
+
+    def forward(
+        self,
+        value: np.ndarray,
+        context: WorkflowContext,
+        *,
+        component: ComponentSpec,
+        state_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
+        del context, component, state_reference
+        array = np.asarray(value, dtype=np.float32)
+        if array.shape[-1] != 2:
+            raise ValueError(f"PairToDifference expects two gripper joints, got shape={array.shape}")
+        return self.scale * (array[..., 0:1] - array[..., 1:2])
+
+    def inverse(
+        self,
+        value: np.ndarray,
+        context: WorkflowContext,
+        *,
+        component: ComponentSpec,
+        state_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
+        del context, component, state_reference
+        array = np.asarray(value, dtype=np.float32)
+        if array.shape[-1] != 1:
+            raise ValueError(f"PairToDifference inverse expects one opening value, got shape={array.shape}")
+        joint = array / (2.0 * self.scale)
+        return np.concatenate([joint, -joint], axis=-1).astype(np.float32)
+
+
 class Euler2Rot6D(ComponentTransform):
     """Convert xyz+euler blocks (6D) to xyz+rot6d blocks (9D).
 

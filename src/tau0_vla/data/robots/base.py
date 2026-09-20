@@ -874,6 +874,8 @@ class RobotConfig:
             action_field_map=action_map,
             state_padding_dim=state_padding_dim or self.state_padding_dim,
             action_padding_dim=action_padding_dim or self.action_padding_dim,
+            state_active_indices=getattr(self, "_state_active_indices", None),
+            action_active_indices=getattr(self, "_action_active_indices", None),
             disable_component_normalization=disable_component_normalization,
             state_has_temporal_axis=bool(self.temporal_sequence and "state" in self.temporal_sequence),
             augment_fn=self.augment_raw_tensors,

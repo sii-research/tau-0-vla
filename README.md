@@ -13,13 +13,17 @@ Foundation Model with World-Model-Guided Test-Time Computation**.
 
 ## News
 
+- **[2026.09.20]** We release **LIBERO post-training and simulation evaluation**.
+  See the [LIBERO guide](configs/libero/README.md) for checkpoints, setup,
+  and evaluation results.
+
+- **[2026.08.19]** 📢 We plan to progressively release components of the
+  high-level policy. Please stay tuned for updates.
+
 - **[2026.07.27]** 🚀 We release the **τ₀-VLA** model
   [Paper](https://arxiv.org/abs/2608.16885),
   [Project Website](https://tau0-vla.github.io/), and
   [Hugging Face](https://huggingface.co/sii-research/tau-0-vla).
-
-- **[2026.08.19]** 📢 We plan to progressively release components of the
-  high-level policy. Please stay tuned for updates.
 
 ## Overview
 
@@ -36,6 +40,13 @@ on 40,115 hours of heterogeneous real-world robot data with multimodal
 co-training.
 
 ![Hierarchical τ₀-VLA pipeline](assets/method.png)
+
+## Model checkpoints
+
+| Model | Description |
+| --- | --- |
+| [τ₀-VLA](https://huggingface.co/sii-research/tau-0-vla) | Pretrained low-level policy for robot post-training |
+| [τ₀-VLA LIBERO](https://huggingface.co/sii-research/tau-0-vla-libero) | LIBERO checkpoint for simulation evaluation |
 
 ## Installation
 
@@ -61,11 +72,13 @@ bash scripts/train.sh configs/example_agibot_world_gong/train.yaml \
 For another dataset or robot, start from
 [`configs/_template/`](configs/_template/README.md) and
 [`src/tau0_vla/adapters/_template/`](src/tau0_vla/adapters/_template/README.md).
+The repository also includes a complete LIBERO simulation recipe under
+[`configs/libero/`](configs/libero/README.md).
 
 ## Serving and evaluation
 
-Public v1 serving supports joint-control checkpoints only. Native EEF data may
-be used for training, but EEF serving is not supported in this release.
+Hardware serving uses joint-control checkpoints. LIBERO simulation uses a
+dedicated end-effector (EEF) policy server.
 
 Serve a post-trained joint-control checkpoint:
 
@@ -79,6 +92,14 @@ Run open-loop evaluation:
 python deploy/openloop.py --ckpt outputs/<run_name> --no-plot
 ```
 
+### LIBERO simulation evaluation
+
+The LIBERO checkpoint fine-tunes the pretrained low-level policy for
+end-effector control across Spatial, Goal, Object, and Long tasks.
+
+See the [LIBERO guide](configs/libero/README.md) for checkpoint downloads,
+model and simulator environments, evaluation commands, and benchmark results.
+
 See [`deploy/`](deploy/README.md) for the payload and action-order contracts.
 
 ## Repository layout
@@ -91,7 +112,7 @@ src/tau0_vla/
 ├── trainer/     post-training entry point
 ├── vlm/         multimodal collation and tokenization
 └── utils/       logging and run specifications
-configs/         reusable template and the AgiBot World example
+configs/         reusable template, AgiBot World example, and LIBERO recipe
 deploy/          policy server and open-loop evaluation
 example_data/    bundled AgiBot World subset
 scripts/         setup, training, and normalization utilities
