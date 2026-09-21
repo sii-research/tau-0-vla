@@ -85,12 +85,25 @@ def convert_numpy_to_json(obj: Any) -> Any:
         return obj
 
 
-def _coerce_cli_value(val: str):
-    """Coerce a CLI string into a native Python type (int / float / bool / None)."""
+# Fields where transformers spells the "off" value as the *string* ``"none"``.
+# ``TrainingArguments.__post_init__`` maps ``"none"``/``["none"]`` to ``[]``, but a
+# real ``None`` falls through to ``[None]`` and the callback lookup then raises
+# ``None is not supported, only azure_ml, ...``. Other fields — ``deepspeed`` is
+# typed ``dict | str | None`` — genuinely want ``None``, so the exception is keyed
+# to the field rather than to the token.
+_STRING_NONE_KEYS = frozenset({"report_to"})
+
+
+def _coerce_cli_value(val: str, key: str):
+    """Coerce a CLI string into a native Python type (int / float / bool / None).
+
+    ``key`` is required rather than defaulted: the ``"none"`` handling below is
+    per-field, and a caller that omitted it would silently get the wrong one.
+    """
     if val.lower() in ("true", "false"):
         return val.lower() == "true"
     if val.lower() == "none":
-        return None
+        return "none" if key in _STRING_NONE_KEYS else None
     try:
         return int(val)
     except ValueError:
@@ -122,8 +135,9 @@ def load_config_from_yaml(yaml_path: str, overrides: dict | None = None) -> dict
 
     Args:
         yaml_path: Path to the YAML config file.
-        overrides: Optional overrides, mapping field name to new value. Values are
-            strings; ``HfArgumentParser`` coerces their types when it parses.
+        overrides: Optional overrides, mapping field name to new value. Values
+            arrive as strings and are coerced here by ``_coerce_cli_value``;
+            ``HfArgumentParser.parse_dict`` hands them to the dataclass as-is.
 
     Returns:
         The parsed config dict, with top-level keys ``experiment``,
@@ -167,7 +181,7 @@ def load_config_from_yaml(yaml_path: str, overrides: dict | None = None) -> dict
         # CLI overrides always arrive as strings; coerce against the type the YAML
         # already holds.
         if isinstance(val, str):
-            val = _coerce_cli_value(val)
+            val = _coerce_cli_value(val, key)
         if key in _experiment_keys:
             config["experiment"][key] = val
         elif key in _model_keys:
