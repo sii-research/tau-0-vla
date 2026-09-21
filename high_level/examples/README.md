@@ -11,7 +11,7 @@ show the open door and the arms' positions.
 
 | Head | Left wrist | Right wrist |
 |---|---|---|
-| ![Head](proposal/head.jpg) | ![Left wrist](proposal/left.jpg) | ![Right wrist](proposal/right.jpg) |
+| <img src="proposal/head.jpg" alt="Head" width="280"> | <img src="proposal/left.jpg" alt="Left wrist" width="280"> | <img src="proposal/right.jpg" alt="Right wrist" width="280"> |
 
 Saved proposal:
 
