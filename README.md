@@ -142,6 +142,29 @@ Additional documentation:
 - [Data pipeline](src/tau0_vla/data/README.md)
 - [Robot adapters](src/tau0_vla/adapters/README.md)
 
+## Citation
+
+If you find our work useful, please cite our [paper](https://arxiv.org/abs/2608.16885):
+
+```bibtex
+@misc{cai2026tau0vlahierarchicalrobotfoundation,
+  title={$\tau_0$-VLA: a Hierarchical Robot Foundation Model with World-Model-Guided Test-Time Computation},
+  author={Xiaowei Cai and Yunuo Cai and Bingao Chen and Jingxiao Chen and Zhi Chen
+          and Siyuan Feng and Tengyu Hou and Jingshun Huang and Han Jiang and Runkun Ju
+          and Dong Li and Mingxiang Li and Shaowei Li and Xinchen Li and Yifan Li
+          and Yi Liu and Zhongyuan Liu and Jianlan Luo and Junwen Miao and Ruiqi Ni
+          and Buqing Nie and Mingjie Pan and Xinlin Ren and Jianheng Song and Jiaxu Wang
+          and Peiqi Wang and Sen Wang and Xiaoyan Wang and Dafeng Wei and Dongming Wu
+          and Pengwei Xie and Pu Yang and Hangjian Ye and Xiangyu Yue and Jinyu Zhang
+          and Qinglin Zhang and Xueyong Zhao and Pengfei Zhou and Yue Zhou},
+  year={2026},
+  eprint={2608.16885},
+  archivePrefix={arXiv},
+  primaryClass={cs.RO},
+  url={https://arxiv.org/abs/2608.16885},
+}
+```
+
 ## License
 
 Code and model weights are released under the [Apache License 2.0](LICENSE).
