@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tau0-world-model"
+version = "0.1.0"
+description = "Step1X goal-image inference and LoRA fine-tuning for Tau0"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE", "src/tau0_world_model/_vendor/step1x/LICENSE"]
+dependencies = [
+  "torch==2.7.1+cu128", "torchvision==0.22.1+cu128", "transformers==4.55.4",
+  "diffusers==0.35.1", "accelerate==1.10.1", "peft==0.17.0",
+  "huggingface-hub==0.34.4", "safetensors==0.6.2", "numpy==2.4.4",
+  "pillow==11.1.0", "einops==0.8.1", "liger-kernel==0.5.4", "qwen-vl-utils==0.0.10",
+  "opencv-python-headless==4.13.0.92", "imagesize==1.4.1",
+  "toml==0.10.2", "voluptuous==0.16.0", "ftfy==6.3.1", "rich==13.9.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"tau0_world_model._vendor.step1x" = ["LICENSE", "*.json"]

@@ -1,0 +1,80 @@
+{
+  "proposal": {
+    "source_sample": "6856_2574207_seg16_l2_r020",
+    "source": "High-level proposal validation demonstrations",
+    "camera_order": [
+      "head",
+      "left",
+      "right"
+    ],
+    "weights": {
+      "repository": "sii-research/tau-0-vla-proposal",
+      "file": "model.safetensors",
+      "sha256": "e3f2e69680d7647c31efaffc11390d967f9d1278d80712c9f2ba3b4e323e5c3f"
+    },
+    "generation": {
+      "do_sample": false,
+      "attention": "eager",
+      "max_new_tokens": 512
+    }
+  },
+  "world_model": {
+    "source_sample": "ds01236/ep0057/seg000",
+    "source": "World-model checkpoint comparison demonstrations",
+    "seed": 42,
+    "denoising_steps": 28,
+    "cfg": 6,
+    "size": 512,
+    "weights": {
+      "repository": "sii-research/tau-0-vla-world-model",
+      "file": "robotics-lora.safetensors",
+      "sha256": "24ea5ee6d13bbce3153cd37e9cc3b5cd71fdb69b528a7b34fee62aa5a585e07e"
+    }
+  },
+  "files": {
+    "proposal/head.jpg": {
+      "bytes": 45125,
+      "sha256": "9ff4cd0e9ebce15d30fc1c2ecdbe5aeab8a90f6415a608e51e4ed497393a4928"
+    },
+    "proposal/left.jpg": {
+      "bytes": 86742,
+      "sha256": "d68153161593fe7a5a97b6f0174690b3266f829a152742079fb33ec8ecd55049"
+    },
+    "proposal/prediction.json": {
+      "bytes": 932,
+      "sha256": "dde77ddc5f46ed85ec06563006ed84f30ed3b08568ca5d43774f8f80df29e9fd"
+    },
+    "proposal/right.jpg": {
+      "bytes": 108663,
+      "sha256": "1e68e3516941b407585c8fb4253e82dc1e749825b620061f7ad6ab993b05f680"
+    },
+    "proposal.jsonl": {
+      "bytes": 562,
+      "sha256": "03d672ac29ae459555594ac8844e1054e360a57c6447056825e842eae24b2b0e"
+    },
+    "proposal_sft.jsonl": {
+      "bytes": 885,
+      "sha256": "be4215245e56f8fe4f01338f5a1eec809c990f38a4cdd36915bad33369ac4511"
+    },
+    "world_model/input.jpg": {
+      "bytes": 37222,
+      "sha256": "fe655919e62b6ef1aaf740b0a58f6eec9d4b5cba13a0fe82d4e38b2d96501eb4"
+    },
+    "world_model/prediction.png": {
+      "bytes": 183977,
+      "sha256": "82815dbf8c78adf6b8dd61c4a9f03dcaff1f101cf2ea25f049a9ed990bcf6501"
+    },
+    "world_model/target.jpg": {
+      "bytes": 46310,
+      "sha256": "875184abf395631018cc1d26a300514c20cf8139de0b4f170f298d061e0fc4cf"
+    },
+    "world_model.jsonl": {
+      "bytes": 134,
+      "sha256": "5763bbd3c8342ab15eb936d38b41620ee8b328d0dd00488ac8644d5bd20e4e60"
+    },
+    "world_model_sft.jsonl": {
+      "bytes": 170,
+      "sha256": "e2f6dea34801f3829b7971d86593f838a9dab0ffe941178320aaa0c67632c787"
+    }
+  }
+}

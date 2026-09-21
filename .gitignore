@@ -153,6 +153,7 @@ fast_data_*/
 !scripts/deepspeed/*.json
 
 *.jsonl
+!high_level/examples/*.jsonl
 *.webp
 temp_visualize_path/*
 visualized_frames/*

@@ -13,6 +13,10 @@ Foundation Model with World-Model-Guided Test-Time Computation**.
 
 ## News
 
+- **[2026.09.21]** We release the **high-level proposal and world model**, with
+  weights, inference and fine-tuning code. See the [high-level guide](high_level/README.md)
+  for setup and usage.
+
 - **[2026.09.20]** We release **LIBERO post-training and simulation evaluation**.
   See the [LIBERO guide](configs/libero/README.md) for checkpoints, setup,
   and evaluation results.
@@ -47,6 +51,8 @@ co-training.
 | --- | --- |
 | [τ₀-VLA](https://huggingface.co/sii-research/tau-0-vla) | Pretrained low-level policy for robot post-training |
 | [τ₀-VLA LIBERO](https://huggingface.co/sii-research/tau-0-vla-libero) | LIBERO checkpoint for simulation evaluation |
+| [τ₀-VLA Proposal](https://huggingface.co/sii-research/tau-0-vla-proposal) | High-level planner with task memory and three-camera input |
+| [τ₀-VLA World Model](https://huggingface.co/sii-research/tau-0-vla-world-model) | Robotics LoRA for goal-image generation |
 
 ## Installation
 
@@ -57,6 +63,16 @@ git clone git@github.com:sii-research/tau-0-vla.git
 cd tau-0-vla
 bash scripts/setup.sh
 ```
+
+## High-level components
+
+[Proposal](high_level/proposal/README.md) predicts the next subtask and updates
+memory from three camera views. [World model](high_level/world_model/README.md)
+generates a goal image from the current observation and a subtask. Both include
+inference and fine-tuning examples; use their separate environments.
+
+See the [high-level quickstart](high_level/README.md) and
+[example predictions](high_level/examples/README.md).
 
 ## Example data and post-training
 
@@ -108,6 +124,7 @@ See [`deploy/`](deploy/README.md) for the payload and action-order contracts.
 src/tau0_vla/
 ├── adapters/    embodiment-specific data layouts and deployment I/O
 ├── data/        LeRobot loading, prompting, masking, and normalization
+├── high_level/  proposal inference, serving, and fine-tuning
 ├── models/      Qwen3.5 backbone and flow-matching action expert
 ├── trainer/     post-training entry point
 ├── vlm/         multimodal collation and tokenization
@@ -115,6 +132,7 @@ src/tau0_vla/
 configs/         reusable template, AgiBot World example, and LIBERO recipe
 deploy/          policy server and open-loop evaluation
 example_data/    bundled AgiBot World subset
+high_level/      component guides, high-level examples, and world-model package
 scripts/         setup, training, and normalization utilities
 ```
 
