@@ -64,6 +64,48 @@ cd tau-0-vla
 bash scripts/setup.sh
 ```
 
+### Intel XPU Support
+
+The τ₀-VLA LIBERO EEF policy inference path is supported on Intel GPUs through
+the PyTorch XPU backend. XPU is opt-in: `--device xpu:0` selects XPU, while
+omitting `--device` preserves the existing CUDA/default device selection.
+With explicit XPU selection, model parameters and checked inference inputs are
+placed on XPU; image construction and action post-processing remain on the
+CPU. There is no CPU inference fallback. The separate LIBERO simulator remains
+a CPU/simulator workload.
+
+The verified XPU environment used Python 3.12.3, a prebuilt PyTorch
+2.15.0+xpu wheel, torchvision 0.29.2+xpu, and Transformers 5.5.4. Keep the
+reference CUDA environment above unchanged; use a separate XPU environment and
+install the repository's non-CUDA serving dependencies without replacing its
+XPU torch/torchvision wheels. The repository's `requirements.txt` and
+`scripts/setup.sh` remain the CUDA-oriented setup instructions.
+
+Verify the backend before starting:
+
+```bash
+python -c "import torch; print(torch.__version__, torch.xpu.is_available()); assert torch.xpu.is_available(), 'XPU required; no CPU fallback'"
+```
+
+Use the [τ₀-VLA LIBERO checkpoint](https://huggingface.co/sii-research/tau-0-vla-libero)
+and follow the [LIBERO guide](configs/libero/README.md) for checkpoint and
+simulator prerequisites. Run the native LIBERO policy server with explicit XPU
+selection:
+
+```bash
+python -m deploy.libero_server \
+  --model /path/to/tau-0-vla-libero \
+  --host 127.0.0.1 --port 8000 \
+  --device xpu:0 --infer-mode eager --warmup-steps 1 --seed 7
+```
+
+The verified smoke used `sii-research/tau-0-vla-libero` revision
+`ce1dd8f0d917011ce45671fa40edaae1fd6a6ec1` on an Intel GPU (XPU), with the
+`libero_eef_robot_prompt_ft` route and the eager BF16 model path. It loaded the
+real checkpoint, ran warmup and inference, and returned finite float32 actions
+with shape `(10, 7)` while model parameters and checked inputs were on XPU.
+Warmup reproducibility passed; 38 target tests passed.
+
 ## High-level components
 
 [Proposal](high_level/proposal/README.md) predicts the next subtask and updates

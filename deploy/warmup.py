@@ -96,6 +96,12 @@ def _run_dummy_input_warmup(policy, *, warmup_steps: int = 3, seed: int = 42) ->
 
     cpu_rng_state = torch.get_rng_state()
     cuda_rng_states = torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None
+    policy_device = getattr(policy, "device", None)
+    xpu_rng_states = (
+        torch.xpu.get_rng_state_all()
+        if policy_device is not None and policy_device.type == "xpu" and torch.xpu.is_available()
+        else None
+    )
 
     try:
         payload = _dummy_payload(policy, seed=seed)
@@ -121,4 +127,6 @@ def _run_dummy_input_warmup(policy, *, warmup_steps: int = 3, seed: int = 42) ->
         torch.set_rng_state(cpu_rng_state)
         if cuda_rng_states is not None:
             torch.cuda.set_rng_state_all(cuda_rng_states)
+        if xpu_rng_states is not None:
+            torch.xpu.set_rng_state_all(xpu_rng_states)
         cuda_sync()

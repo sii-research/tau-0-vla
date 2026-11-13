@@ -71,7 +71,7 @@ class Tau0VLAPolicy:
         spec = load_checkpoint_spec(ckpt_path, route=route)
         data_spec = load_data_spec(ckpt_path, route=spec.route)
 
-        model_args, rebuilt_data_args, training_args, _ = load_resolved_args(ckpt_path)
+        model_args, rebuilt_data_args, training_args, _ = load_resolved_args(ckpt_path, inference=True)
         model_args.model_name_or_path = str(ckpt_path)
 
         from tau0_vla.models.model_builder import ModelBuilder

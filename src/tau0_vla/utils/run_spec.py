@@ -159,7 +159,11 @@ def load_run_spec(ckpt_or_output_dir: str) -> RunSpec:
     )
 
 
-def load_resolved_args(ckpt_or_output_dir: str) -> Tuple[Any, Any, Any, RunSpec]:
+def load_resolved_args(
+    ckpt_or_output_dir: str,
+    *,
+    inference: bool = False,
+) -> Tuple[Any, Any, Any, RunSpec]:
     """Reconstruct ``(ModelArguments, DataArguments, TrainingArguments, RunSpec)``
     from a saved run_spec. Downstream callers (eval, deploy, resume) use
     this instead of re-parsing yaml/CLI.
@@ -190,7 +194,13 @@ def load_resolved_args(ckpt_or_output_dir: str) -> Tuple[Any, Any, Any, RunSpec]
             setattr(data_args, runtime_key, spec.data_args[runtime_key])
 
     training_parser = HfArgumentParser(TrainingArguments)
-    (training_args,) = training_parser.parse_dict(spec.training_args, allow_extra_keys=True)
+    training_values = dict(spec.training_args)
+    if inference:
+        # Training snapshots can retain a CUDA/DeepSpeed launcher setting even
+        # though deployment only needs the dataclass values used by the model.
+        # Avoid importing the optional training-only package on inference paths.
+        training_values["deepspeed"] = None
+    (training_args,) = training_parser.parse_dict(training_values, allow_extra_keys=True)
     return model_args, data_args, training_args, spec
 
 
