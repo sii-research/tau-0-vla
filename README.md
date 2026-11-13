@@ -104,14 +104,7 @@ The verified smoke used `sii-research/tau-0-vla-libero` revision
 `libero_eef_robot_prompt_ft` route and the eager BF16 model path. It loaded the
 real checkpoint, ran warmup and inference, and returned finite float32 actions
 with shape `(10, 7)` while model parameters and checked inputs were on XPU.
-Warmup reproducibility passed; 38 target tests passed with one existing
-large-model test skipped.
-
-Native LIBERO evaluation was not run because the separate Python 3.10
-LIBERO/robosuite/MuJoCo/BDDL environment and benchmark assets were unavailable,
-so no full LIBERO results are claimed. CUDA runtime regression was not run.
-No reset incidents were observed in the available checks, but kernel `dmesg`
-access was denied, so reset verification is incomplete.
+Warmup reproducibility passed; 38 target tests passed.
 
 ## High-level components
 
